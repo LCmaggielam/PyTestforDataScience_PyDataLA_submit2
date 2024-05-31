@@ -6,13 +6,17 @@ from .. import my_module
 """
 Solve the first Challenge
 """
-
-
 def test_get_data_from_api(monkeypatch):
-    # Fill in code here
 
+    # Make a function that when called returns a fake response
+    def return_fake_response(url):
+        return "Fake Response"
+
+    monkeypatch.setattr(my_module.requests, "get", return_fake_response)
     response = my_module.get_data_from_api()
     assert response == "Fake Response"
+
+
 
 
 """
@@ -21,7 +25,12 @@ Section two bonus
 
 
 def test_df_add_again(monkeypatch):
-    # Fill in code here
+
+    # A mock with an attribute json which is another mock whos other return value is ["json_response"] when called
+    response_mock = Mock(json=Mock(return_value=["json_response"]))
+
+    # Return response_mock when called
+    monkeypatch.setattr(my_module.requests, "get", lambda x: response_mock)
 
     json = my_module.get_json_from_response()
     assert json == ["json_response"]
